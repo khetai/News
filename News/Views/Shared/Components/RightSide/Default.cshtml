@@ -1,0 +1,184 @@
+﻿@using System.Globalization;
+@inject Microsoft.AspNetCore.Mvc.Localization.IViewLocalizer localizer
+@{
+    List<CategoryWithCount> catList = ViewBag.Category;
+    List<Xeberler> newsList = ViewBag.News;
+}
+
+
+<div class="col-lg-4">
+    <aside class="post-sidebar">
+        <div class="newsletter-widget weekly-newsletter bg-grey-light-three m-b-xs-40">
+            <div class="newsletter-content">
+                <div class="newsletter-icon">
+                    <i class="feather icon-send"></i>
+                </div>
+                <div class="section-title">
+                    <h3 class="axil-title">@localizer["Kanalımıza abone olun"]</h3>
+                    <p class="mid m-t-xs-10 m-b-xs-20">
+                        @localizer["Bütün yeniliklərdən xəbərdar olun"]
+                    </p>
+                </div>
+                <div class="subscription-form-wrapper">
+                    <form action="#" class="subscription-form">
+                        <div class="form-group form-group-small m-b-xs-20">
+                            <label for="subscription-email">@localizer["E-poçt daxil edin"]</label>
+                            <input type="email" required name="subsemail" id="subscription-email">
+                        </div>
+                        <div class="m-b-xs-0">
+                            <button class="btn btn-primary btn-small" id="submitsub">@localizer["ABUNƏ OL"]</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <div class="category-widget m-b-xs-40">
+            <div class="widget-title">
+                <h3>@localizer["Kateqoriyalar"]</h3>
+            </div>
+
+            <div class="category-carousel">
+                <div class="owl-carousel owl-theme">
+                    <div class="cat-carousel-inner">
+                        <ul class="category-list-wrapper">
+                            @foreach (var item in catList)
+                            {
+                                <li class="category-list perfect-square">
+                                    <a href="~/Home/NewsForCategory/@item.Category.CategoryId" class="list-inner">
+                                        <div class="post-info-wrapper overlay">
+                                            <div class="counter-inner">
+                                                <span class="counter">@item.Count</span>+
+                                            </div>
+                                            <h4 class="cat-title ">@item.Category["CategoryName" + localizer["Az"].Value]</h4>
+                                        </div>
+                                    </a>
+                                </li>
+                            }
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+                
+        <div class="post-widget sidebar-post-widget m-b-xs-40">
+            <ul class="nav nav-pills row no-gutters">
+                <li class="nav-item col">
+                    <a class="nav-link active" data-bs-toggle="pill" href="#recent-post">@localizer["Xəbərlər"]</a>
+                </li>
+                <li class="nav-item col">
+                    <a class="nav-link" data-bs-toggle="pill" href="#popular-post">@localizer["Ən çox baxılanlar"]</a>
+                </li>
+            </ul>
+            <div class="tab-content">
+                <div class="tab-pane fade show active" id="recent-post">
+                    <div class="axil-content">
+                       
+                        @foreach (var item in newsList.OrderByDescending(x => x.NewsDate).Where(x=>x.XeberlerAdvantageId == 2))
+                        {
+                            CultureInfo azerbaijaniCulture = new CultureInfo("az-Latn-AZ");
+                            string date = ((DateTime)item.NewsDate).ToString("dd MMMM yyyy", azerbaijaniCulture);
+
+                            <div class="media post-block post-block__small">
+                                <a href="~/Home/NewsDetails/@item.NewsId" class="align-self-center">
+                                    <img class=" m-r-xs-30" src="~/img/@item.NewsPhoto" alt="@item.NewsTitleAz">
+                                </a>
+                                <div class="media-body media-body-rightside">
+                                    <h4 class="axil-post-title hover-line hover-line">
+                                        <a class="news-title" style="color: @item.NewsColor !important;" href="~/Home/NewsDetails/@item.NewsId">
+                                            @item["NewsTitle" + localizer["Az"].Value]
+                                        </a>
+                                    </h4>
+                                    @*<div class="post-metas">
+                                        <ul class="list-inline">
+                                            <li><a href="#">@date</a></li>
+                                        </ul>
+                                    </div>*@
+                                </div>
+                            </div>
+
+                        }
+                    </div>
+                </div>
+                <div class="tab-pane fade" id="popular-post">
+                    <div class="axil-content">
+                        @foreach (var item in newsList.OrderByDescending(x => x.NewsView))
+                        {
+                            CultureInfo azerbaijaniCulture = new CultureInfo("az-Latn-AZ");
+                            string date = ((DateTime)item.NewsDate).ToString("dd MMMM yyyy", azerbaijaniCulture);
+
+                            <div class="media post-block post-block__small">
+                                <a href="~/Home/NewsDetails/@item.NewsId" class="align-self-center">
+                                    <img class=" m-r-xs-30" src="~/img/@item.NewsPhoto" alt="@item.NewsTitleAz">
+                                </a>
+                                <div class="media-body media-body-rightside">
+                                    <h4 class="axil-post-title hover-line hover-line">
+                                        <a class="news-title" style="color: @item.NewsColor !important;" href="~/Home/NewsDetails/@item.NewsId">
+                                            @item["NewsTitle" + localizer["Az"].Value]
+                                        </a>
+                                    </h4>
+                                    <div class="post-metas">
+                                        <ul class="list-inline">
+                                            <li><a href="#">@date</a></li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+@*        <div class="tag-widget m-b-xs-30">
+            <div class="widget-title">
+                <h3>@localizer["Kateqoriyalar"]</h3>
+            </div>
+            <div class="axil-content">
+                <ul class="tag-list-wrapper">
+
+                    @foreach (var item in catList.Take(8))
+                    {
+                        <li><a href="~/Home/NewsForCategory/@item.Category.CategoryId">@item.Category["CategoryName" + localizer["Az"].Value]</a></li>
+                    }
+                </ul>
+            </div>
+        </div>
+*@    </aside>
+</div>
+
+
+<script>
+    $("#submitsub").click(function (e) {
+        e.preventDefault();
+        var subsemail = $("#subscription-email").val();
+        console.log(subsemail.length)
+        if (subsemail.length == 0) {
+            toastNotif({
+                text: 'Xahiş edirik müvafiq xananı doldurun!',
+                color: '#d92402',
+                timeout: 2000,
+                icon: 'error'
+            });
+        }
+        else if(subsemail.indexOf('@@') === -1){
+            toastNotif({
+                text: 'Xahiş edirik e-poçt daxil edin!',
+                color: '#d92402',
+                timeout: 2000,
+                icon: 'error'
+            });
+        }
+        else {
+            $.post('../../Home/Subscribe', { subsemail: subsemail }, function (res) {
+                toastNotif({
+                    text: 'Siz uğurla abunə oldunuz!',
+                    color: '#35ac18',
+                    timeout: 2000,
+                    icon: 'valid'
+                });
+            });
+        }
+    });
+
+</script>

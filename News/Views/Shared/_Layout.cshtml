@@ -1,0 +1,243 @@
+﻿@using System.Globalization;
+@inject Microsoft.AspNetCore.Mvc.Localization.IViewLocalizer localizer
+<!DOCTYPE html>
+
+<html class="no-js" lang="az">
+<head>
+    <meta charset="utf-8">
+    <meta name="twitter:card" content="summary_large_image">
+    <title>Getnews</title>
+    <link rel="apple-touch-icon" sizes="57x57" href="~/images/getnewslogo1cut.png">
+    <link rel="apple-touch-icon" sizes="60x60" href="~/images/getnewslogo1cut.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="~/images/getnewslogo1cut.png">
+    <link rel="apple-touch-icon" sizes="76x76" href="~/images/getnewslogo1cut.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="~/images/getnewslogo1cut.png">
+    <link rel="apple-touch-icon" sizes="120x120" href="~/images/getnewslogo1cut.png">
+    <link rel="apple-touch-icon" sizes="144x144" href="~/images/getnewslogo1cut.png">
+    <link rel="apple-touch-icon" sizes="152x152" href="~/images/getnewslogo1cut.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="~/images/getnewslogo1cut.png">
+    <link rel="icon" type="image/png" sizes="192x192" href="~/images/getnewslogo1cut.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="~/images/getnewslogo1cut.png">
+    <link rel="icon" type="image/png" sizes="96x96" href="~/images/getnewslogo1cut.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="~/images/getnewslogo1cut.png">
+    <link rel="manifest" href="~/assets/favicon/manifest.json">
+    <meta name="msapplication-TileColor" content="#ffffff">
+    <meta name="theme-color" content="#ffffff">
+    <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,500i,700,700i,900" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="~/assets/css/fontawesome-all.min.css">
+    <link rel="stylesheet" type="text/css" href="~/assets/css/iconfont.css">
+    <link rel="stylesheet" type="text/css" href="~/assets/css/vendor/bootstrap.min.css">
+    <link rel="stylesheet" href="~/assets/css/vendor/owl.carousel.min.css">
+    <link rel="stylesheet" type="text/css" href="~/assets/css/vendor/magnific-popup.css">
+    <link rel="stylesheet" type="text/css" href="~/assets/css/vendor/animate.css">
+    <link rel="stylesheet" type="text/css" href="~/assets/css/style.css">
+    <link href="~/assets/css/notification.css" rel="stylesheet" />
+    <script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+
+
+</head>
+
+<body>
+    <header class="page-header">
+        <div class="header-top bg-grey-dark-one">
+            <div class="container">
+                <div class="row align-items-center">
+                    <div class="col-md">
+                        @{
+                            CultureInfo currentCulture = System.Threading.Thread.CurrentThread.CurrentCulture;
+                            string Day = ((DateTime)DateTime.Now).ToString("dd MMMM", currentCulture);
+
+                        }
+                        <ul class="header-top-nav list-inline justify-content-center justify-content-md-start">
+                            <li class="current-date">@Day, @DateTime.Now.Year</li>
+                            <li><a href="/">@localizer["Əsas Səhifə"]</a> </li>
+
+                            <li><a href="/Home/Contact">@localizer["Əlaqə"]</a></li>
+                            <li><a href="/Home/About">@localizer["Haqqımızda"]</a></li>
+                        </ul>
+                    </div>
+                    <div class="col-md-1">
+                        <partial name="_Culture" />
+
+                    </div>
+                    <div class="col-md-auto">
+                        <ul class="ml-auto social-share header-top__social-share">
+                            <li><a href="#"><i class="fab fa-facebook-f"></i></a></li>
+                            <li><a href="#"><i class="fab fa-twitter"></i></a></li>
+                            <li><a href="#"><i class="fab fa-instagram"></i></a></li>
+                            <li><a href="#"><i class="fab fa-linkedin-in"></i></a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <nav class="navbar bg-white">
+            <div style="width:90%;margin:auto">
+                <div class="navbar-inner">
+                    <div class="brand-logo-container">
+
+@*                        burqer menu ikonu
+*@                       
+                        <i class="fa-solid fa-bars" id="toggleButton2"></i> &nbsp;
+                        <a href="/Home/Index" class="logg">
+                            <img src="~/images/getnewslogo1cut.png" alt="" class="brand-logo">
+                        </a>
+                    </div>
+                    <div class="main-nav-wrapper">
+                        <ul class="main-navigation list-inline" id="main-menu">
+                            @*<partial name="_Culture" />*@
+                            @await Component.InvokeAsync("Category")
+                        </ul>
+                    </div>
+                    <div class="navbar-extra-features ml-auto">
+
+                        <form asp-controller="home" asp-action="Search" class="navbar-search" method="post">
+                            <div class="search-field">
+                                <input type="text" class="navbar-search-field" name="Text" placeholder="@localizer["Axtarış"]...">
+                                <button class="navbar-search-btn" type="submit">
+                                    <i class="fal fa-search"></i>
+                                </button>
+                            </div>
+                            <a href="#" class="navbar-search-close"><i class="fal fa-times"></i></a>
+                        </form>
+
+                        <a href="#" class="nav-search-field-toggler" data-toggle="nav-search-feild">
+                            <i class="far fa-search"></i>
+                        </a>
+
+                    </div>
+                    <div class="partial-view-media">
+                        <partial name="_Culture" />
+
+                    </div>
+
+                </div>
+            </div>
+        </nav>
+
+@*        burqer menuya klik edende acilan kateqoriyalar
+*@       
+<div class="burger-category" id="categoryDiv">
+            @await Component.InvokeAsync("Category")
+        </div>
+    </header>
+    @RenderBody()
+    <footer class="page-footer bg-grey-dark-key">
+        <div class="container">
+            <div class="footer-top">
+                <div class="row">
+                </div>
+            </div>
+            <div class="footer-mid">
+                <div class="row align-items-center">
+                    <div class="col-md">
+                        <div class="footer-logo-container">
+                            <a href="index.html">
+                                <img src="~/images/getnewslogo1cut.png" alt="footer logo" class="footer-logo">
+                            </a>
+                        </div>
+                    </div>
+                    <div class="col-md-auto">
+                        <div class="footer-social-share-wrapper">
+                            <div class="footer-social-share">
+                                <div class="axil-social-title"><a href="/Home/Contact" style="color:black;">@localizer["Bizimlə əlaqə"]</a>  </div>
+                                <ul class="social-share social-share__with-bg">
+                                    <li><a href="#"><i class="fab fa-facebook-f"></i></a></li>
+                                    <li><a href="#"><i class="fab fa-twitter"></i></a></li>
+                                    <li><a href="#"><i class="fab fa-instagram"></i></a></li>
+                                    <li><a href="#"><i class="fab fa-linkedin-in"></i></a></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <div class="up" onclick="goToTop()"><i class="fa-solid fa-up-long"></i></div>
+                @*					<ul class="footer-bottom-links">
+                <li><a href="#">Azerbaijan</a></li>
+                <li><a href="#">Politics</a></li>
+                <li><a href="#">Region</a></li>
+                <li><a href="#">Analytics</a></li>
+                <li><a href="#">World</a></li>
+                <li><a href="#">Economy</a></li>
+                <li><a href="#">People</a></li>
+                <li><a href="#">Sport</a></li>
+                <li><a href="#">Culture</a></li>
+                <li><a href="#">Sience/Technology</a></li>
+                <li><a href="#">Tourism</a></li>
+                </ul>
+                *@					<p class="axil-copyright-txt">
+                    © @DateTime.Now.Year. All rights reserved by <a target="_blank" href="http://aimtech.az/">&nbsp; AimTech</a>
+                </p>
+            </div>
+        </div>
+    </footer>
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+    <script src="~/assets/js/vendor/jquery.min.js"></script>
+    <script src="~/assets/js/notification.js"></script>
+
+
+    <script src="~/assets/js/vendor/jquery-migrate.min.js"></script>
+    <script src="~/assets/js/vendor/easing-1.3.js"></script>
+    <script src="~/assets/js/vendor/jquery.waypoints.min.js"></script>
+
+    @*	<script src="~/assets/js/vendor/slick.min.js"></script>
+    <script src="~/assets/js/vendor/bootstrap.bundle.min.js"></script>
+    <script src="~/assets/js/vendor/isotope.pkgd.min.js"></script>*@
+
+    <script src="~/assets/js/vendor/jquery.counterup.js"></script>
+    <script src="~/assets/js/vendor/jquery.magnific-popup.min.js"></script>
+    <script src="~/assets/js/vendor/jquery.nicescroll.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/css-vars-ponyfill@2"></script>
+    <script src="~/assets/js/plugins.js"></script>
+    <script src="~/assets/js/main.js"></script>
+
+
+    <script>
+        function goToTop() {
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth' 
+            });
+        }
+
+        window.onscroll = function () {
+            if (document.body.scrollTop > 20 || document.documentElement.scrollTop > 20) {
+                document.querySelector('.up').style.display = 'block';
+            } else {
+                document.querySelector('.up').style.display = 'none';
+            }
+        };
+
+
+
+        //burqer menu toogle (acib baglayir)
+        $(document).ready(function () {
+            $("#categoryDiv").hide();
+
+            $("#toggleButton2").click(function () {
+                $("#categoryDiv").toggle();
+            });
+        });
+    </script>
+</body>
+
+
+</html>
+<style>
+    .partial-view-media {
+        display: none;
+    }
+
+    @@media (max-width: 991px) {
+        .partial-view-media {
+            display: block !important;
+        }
+    }
+</style>

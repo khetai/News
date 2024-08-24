@@ -1,0 +1,182 @@
+﻿@model Xeberler
+@{
+    ViewData["Title"] = "AddNews";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+
+<div class="app-main__outer">
+    <div class="app-main__inner">
+        <div class="tab-content">
+            <div class="tab-pane tabs-animation fade show active" id="tab-content-0" role="tabpanel">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="main-card mb-3 card">
+                            <div class="card-body">
+                                <h5 class="card-title">Yeni xəbər</h5>
+
+                                <form action="~/Admin/EditNews/@Model.NewsId" method="post" enctype="multipart/form-data">
+                                    <div class="form-row">
+                                        <div class="col-md-6">
+                                            <div class="position-relative form-group">
+                                                <select asp-for="XeberlerAdvantageId" class="form-control" asp-items="ViewBag.Advantages">
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="position-relative form-group">
+                                                <input placeholder="Paylaşılma zamanı" class="form-control" type="datetime-local" asp-for="XeberlerFutureDate" />
+                                            </div>
+                                        </div>
+                                        @*      <div class="col-md-6">
+                                        <div class="position-relative form-group">
+                                        <label>Mənbə üçün link</label>
+                                        <input placeholder="Xəbərin linki" class="form-control" asp-for="XeberlerReferanceUrl" />
+                                        </div>
+                                        </div> *@
+                                        <div class="col-md-6">
+
+                                            @foreach (TitleColor item in ViewBag.TitleColorNames)
+                                            {
+                                                <div>
+
+                                                    <label style="display:block;">Başlıq rəngi</label>
+                                                    <label>@item.TitleColorName</label>
+                                                    <input type="radio" value="@item.TitleColorId" class="colorCheckbox" name="SelectedColorId" />
+                                                </div>
+                                            }
+
+
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="position-relative form-group">
+                                                <label>Twitter link</label>
+                                                <textarea placeholder="Twitter" class="form-control" asp-for="XeberTwitter"></textarea>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="position-relative form-group">
+                                                <label>Video URL</label>
+                                                <textarea placeholder="Video URL" class="form-control" asp-for="XeberlerVideoUrl"></textarea>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-12">
+                                            <div class="position-relative form-group">
+                                                <label>Dil Seçimi</label>
+                                                <select id="languageSelect" class="form-control">
+                                                    <option value="">Dil seçin</option>
+                                                    <option value="az">Azərbaycan</option>
+                                                    <option value="en">İngilis</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-12" id="azerbaycanInputs" style="display: none;">
+                                            <div class="position-relative form-group">
+                                                <label>Xəbərin başlığı(az)</label>
+                                                <input placeholder="Xəbərin başlığı" class="form-control" asp-for="NewsTitleAz" />
+                                            </div>
+                                            <div class="position-relative form-group">
+                                                <label>Xəbər haqqında(az)</label>
+                                                <textarea id="xebermetni" placeholder="Xəbər haqqında" rows="5" class="form-control" asp-for="NewsContentAz"></textarea>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-12" id="ingilisceInputs" style="display: none;">
+                                            <div class="position-relative form-group">
+                                                <label>Xəbərin başlığı(en)</label>
+                                                <input placeholder="Xəbərin başlığı" class="form-control"  asp-for="NewsTitleEn" />
+                                            </div>
+                                            <div class="position-relative form-group">
+                                                <label>Xəbər haqqında(en)</label>
+                                                <textarea id="xebermetnien" placeholder="Xəbər haqqında" rows="5" class="form-control"  asp-for="NewsContentEn"></textarea>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-12">
+                                            <div style="flex-wrap:wrap;" class="position-relative form-group d-flex category-mobile-wrap justify-content-between">
+                                                @foreach (Category item in ViewBag.Category)
+                                                {
+                                                    <div>
+                                                        <label>@item.CategoryNameAz</label>
+                                                        <input type="checkbox" value="@item.CategoryId" name="kateqoriyalar" />
+                                                    </div>
+                                                }
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="position-relative form-group">
+                                                <label>Xəbərin başlıq şəkli</label>
+                                                <input type="file" class="form-control" value="sekil"  name="sekil" />
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="position-relative form-group">
+                                                <label>Xəbərin digər şəkilləri</label>
+                                                <input type="file" multiple class="form-control" name="sekiller" />
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <button class="mt-1 btn btn-primary">Submit</button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="~/ckeditor/build/ckeditor.js"></script>
+<script>
+    const languageSelect = document.getElementById("languageSelect");
+    const azerbaycanInputs = document.getElementById("azerbaycanInputs");
+    const ingilizceInputs = document.getElementById("ingilisceInputs");
+
+    languageSelect.addEventListener("change", toggleLanguageInputs);
+
+    function toggleLanguageInputs() {
+        if (languageSelect.value === "az") {
+            azerbaycanInputs.style.display = "block";
+            ingilizceInputs.style.display = "none";
+        } else if (languageSelect.value === "en") {
+            azerbaycanInputs.style.display = "none";
+            ingilizceInputs.style.display = "block";
+        }
+    }
+
+    ClassicEditor
+        .create(document.querySelector('#xebermetni'))
+        .catch(error => {
+            console.error(error);
+        });
+    ClassicEditor
+        .create(document.querySelector('#xebermetnien'))
+        .catch(error => {
+            console.error(error);
+        });
+
+
+
+
+
+
+            //var textar = document.getElementById("xebermetni");
+
+            //textar.addEventListener("keydown", function (o) {
+            //    if (o.key === "Enter") {
+            //        //o.preventDefault();
+            //        var cursorPos = this.selectionStart;
+            //        var text = this.value;
+            //        var newText = text.substring(0, cursorPos) + '\n' + text.substring(cursorPos);
+            //        this.value = newText;
+            //    }
+            //});
+
+
+
+
+
+
+
+</script>
+
+

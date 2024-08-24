@@ -1,0 +1,70 @@
+﻿Scaffold-DbContext "Server=wdb4.my-hosting-panel.com;Database=rmlubeco_media;User Id=rmlubeco_media;Password=MediaTimes@123;TrustServerCertificate=True" Microsoft.EntityFrameworkCore.SqlServer -OutputDir Models -force
+
+
+  public object this[string propertyName]
+        {
+            get
+            {
+                // probably faster without reflection:
+                // like:  return Properties.Settings.Default.PropertyValues[propertyName] 
+                // instead of the following
+                Type myType = typeof(Home);
+                PropertyInfo myPropInfo = myType.GetProperty(propertyName);
+                return myPropInfo.GetValue(this, null);
+            }
+            set
+            {
+                Type myType = typeof(Region);
+                PropertyInfo myPropInfo = myType.GetProperty(propertyName);
+                myPropInfo.SetValue(this, value, null);
+            }
+        }
+
+
+
+        xeberler
+
+     
+
+
+
+    public object this[string propertyName]
+    {
+        get
+        {
+            // probably faster without reflection:
+            // like:  return Properties.Settings.Default.PropertyValues[propertyName] 
+            // instead of the following
+            Type myType = typeof(Xeberler);
+            PropertyInfo myPropInfo = myType.GetProperty(propertyName);
+            return myPropInfo.GetValue(this, null);
+        }
+        set
+        {
+            Type myType = typeof(Xeberler);
+            PropertyInfo myPropInfo = myType.GetProperty(propertyName);
+            myPropInfo.SetValue(this, value, null);
+        }
+    }
+
+    category
+
+    
+    public object this[string propertyName]
+    {
+        get
+        {
+            // probably faster without reflection:
+            // like:  return Properties.Settings.Default.PropertyValues[propertyName] 
+            // instead of the following
+            Type myType = typeof(Category);
+            PropertyInfo myPropInfo = myType.GetProperty(propertyName);
+            return myPropInfo.GetValue(this, null);
+        }
+        set
+        {
+            Type myType = typeof(Category);
+            PropertyInfo myPropInfo = myType.GetProperty(propertyName);
+            myPropInfo.SetValue(this, value, null);
+        }
+    }

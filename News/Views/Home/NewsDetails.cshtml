@@ -1,0 +1,229 @@
+﻿@using System.Globalization;
+@inject Microsoft.AspNetCore.Mvc.Localization.IViewLocalizer localizer
+@model NewsDetailsViewModel
+@{
+    CultureInfo azerbaijaniCulture = new CultureInfo("az-Latn-AZ");
+    string Day = ((DateTime)Model.Xeberler.NewsDate).ToString("dd", azerbaijaniCulture);
+    string Month = ((DateTime)Model.Xeberler.NewsDate).ToString("MMMM", azerbaijaniCulture);
+
+}
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta property="og:url" content="https://getnews.az/Home/NewsDetails/@Model.Xeberler.NewsId">
+<meta property="og:title" content="@Model.Xeberler.NewsTitleAz">
+<meta property="og:description" content="@Model.Xeberler.NewsContentAz">
+<meta property="og:image" content="~/img/@Model.Xeberler">
+<meta property="og:image:alt" content="@Model.Xeberler.NewsContentAz">
+<meta property="og:type" content="@Model.Xeberler.NewsTitleAz">
+<meta name="msapplication-TileImage" content="@Model.Xeberler.NewsPhoto">
+
+<title>NewsTitleAz</title>
+
+
+@*<section class="newsdetails-html">*@
+
+    <section class="banner banner__default bg-grey-light-three">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-2">
+                    <div class="post-date perfect-square bg-primary-color" style="height: 160px;">
+                       @* @Month <span>@Day</span>*@
+
+                    <ul class="list-inline">
+                        @{
+                            CultureInfo cultureForFormatting = System.Threading.Thread.CurrentThread.CurrentCulture;
+                            DateTime newsDateForFormatting = (DateTime)Model.Xeberler.NewsDate; // Assuming Model is your ViewModel
+                            string formattedDateForDisplay = newsDateForFormatting.ToString("MMMM dd", cultureForFormatting);
+                        }
+                        <li><i class="dot"></i>@formattedDateForDisplay</li>
+                    </ul>
+                    </div>
+                </div>
+
+                <div class="col-lg-8">
+                    <div class="post-title-wrapper">
+                        <div class="btn-group">
+                            @foreach (var cat in Model.CategoryForNewsModel)
+                            {
+                                <a href="#" class="cat-btn bg-color-blue-one">@cat.CategoryForNewsCategory["CategoryName" + @localizer["Az"].Value]</a>
+                            }
+                    </div>
+                    <h2 class="m-b-xs-0 axil-title hover-line news-title" style="color: @Model.Xeberler.NewsColor !important;">
+                            @Model.Xeberler["NewsTitle" + @localizer["Az"].Value]
+                        </h2>
+                        <div class="post-metas banner-post-metas m-t-xs-10">
+                            <ul class="list-inline">
+                            @{
+                                CultureInfo currentCulture = System.Threading.Thread.CurrentThread.CurrentCulture;
+                                DateTime newsDateTime = (DateTime)Model.Xeberler.NewsDate; // Assuming Model is your ViewModel
+                                string formattedDate = newsDateTime.ToString("dd MMMM yyyy", currentCulture);
+                                string formattedTime = newsDateTime.ToString("HH:mm", currentCulture);
+                                string dateTimeString = $"{formattedDate} {formattedTime}";
+                            }
+                            <li><i class="dot">.</i>@dateTimeString</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <div class="post-single-wrapper p-t-xs-60">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8">
+                    <main class="site-main">
+                        <article class="post-details">
+                            <div class="single-blog-wrapper">
+                                <div class="post-details__social-share">
+                                    <ul class="social-share social-share__with-bg social-share__vertical">
+                                        <li><a href="#"><i class="fab fa-facebook-f"></i></a></li>
+                                        <li><a href="#"><i class="fab fa-twitter"></i></a></li>
+
+                                        <li><a href="#"><i class="fab fa-linkedin-in"></i></a></li>
+                                    </ul>
+                                </div>
+                                <figure>
+                                    <img src="~/img/@Model.Xeberler.NewsPhoto" alt="@Model.Xeberler["NewsTitle" + @localizer["Az"].Value]">
+                                    @*<figcaption>Drawn for an insurance company</figcaption>*@
+                                </figure>
+
+                                <p>
+                                    @Html.Raw(Model.Xeberler["NewsContent" + @localizer["Az"].Value])
+
+                                </p>
+
+                                @if (Model.Xeberler.XeberTwitter != null)
+                                {
+                                    string linkFromSQL = Model.Xeberler.XeberTwitter;
+                                    string modifiedLink = linkFromSQL.Replace("@", "@@");
+
+                                    @Html.Raw(modifiedLink)
+                                    ;
+                                }
+                                <ul class="row gallery text-center">
+                                    @foreach (var item in Model.Photos)
+                                    {
+                                        <li class="col-lg-6">
+                                            <figure>
+                                                <img src="~/img/@item.PhotoUrl" alt="MediaTimes">
+                                            </figure>
+                                        </li>
+                                    }
+                                </ul>
+
+
+                                <figure class="post-media">
+                                    <div class="embed-responsive embed-responsive-16by9">
+                                        @Html.Raw(Model.Xeberler.XeberlerVideoUrl)
+                                    </div>
+                                    @*<figcaption>
+                                        Drawn for an insurance company
+                                    </figcaption>*@
+                                </figure>
+
+                            </div>
+                        </article>
+
+                        <div class="post-shares m-t-xs-60">
+                            <div class="title">@localizer["Paylaş"]:</div>
+                            <ul class="social-share social-share__rectangular">
+                                <li>
+                                <div class="btn fb bg-color-facebook fb-share-button" data-href="https://getnews.az/Home/NewsDetails/@Model.Xeberler.NewsId" data-layout="button">
+                                    1K+
+                                    </div>
+                                </li>
+                                <li>
+                                <div class="btn fb bg-color-green-three" data-href="https://getnews.az/Home/NewsDetails/@Model.Xeberler.NewsId" data-action="share/whatsapp/share" data-layout="button">
+                                    <i class="fab fa-whatsapp"></i>
+
+                                    1K+
+                                </div>
+                                </li>
+                            
+                                <li>
+
+                                    <div class=" btn twitter bg-color-twitter" href="http://www.twitter.com/intent/tweet?url=https://getnews.az/Home/NewsDetails/@Model.Xeberler.NewsId&t=@Model.Xeberler.NewsTitleAz" target="_blank">
+                                        <i class="fab fa-twitter"></i>
+                                        1000+
+                                    </div>
+
+                                </li>
+                                
+                            </ul>
+                        </div>
+
+                        <hr class="m-t-xs-50 m-b-xs-60">
+
+                                   
+                    </main>
+                </div>
+
+                                    @await Component.InvokeAsync("RightSide")
+
+                <section class="related-post p-b-xs-30">
+                    <div class="container container-similar">
+                        <div class="section-title m-b-xs-40">
+                            <h2 class="axil-title">@localizer["OXŞAR XƏBƏRLƏR"]</h2>
+                            <a href="~/Home/NewsForCategory/@Model.Xeberler.CategoryForNews.FirstOrDefault().CategoryForNewsCategoryId" class="btn-link ml-auto"></a>
+                        </div>
+                        <div class="grid-wrapper">
+                            <div class="row">
+                                @foreach (var item in Model.SimilarXeberler)
+                                {
+                                    string date = ((DateTime)Model.Xeberler.NewsDate).ToString("dd MMMM yyyy", azerbaijaniCulture);
+                                    <div class="col-lg-3 col-md-4">
+                                        <div class="content-block m-b-xs-30">
+                                            <a href="~/Home/NewsDetails/@item.CategoryForNewsNews.NewsId">
+                                                <img src="~/img/@item.CategoryForNewsNews.NewsPhoto" alt="abstruct image" class="img-fluid">
+                                                <div class="grad-overlay"></div>
+                                            </a>
+                                            <div class="media-caption">
+                                                <div class="caption-content">
+                                                    <h3 class="axil-post-title hover-line hover-line">
+                                                    <a class="news-title" style="color: @item.CategoryForNewsNews.NewsColor !important;" href="~/Home/NewsDetails/@item.CategoryForNewsNews.NewsId">
+                                                            @item.CategoryForNewsNews["NewsTitle" + @localizer["Az"].Value]
+                                                        </a>
+                                                    </h3>
+                                                    <div class="caption-meta">
+                                                        <a href="#">@date</a>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                }
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+
+            </div>
+        </div>
+    </div>
+
+
+@*</section>*@
+
+<style>
+    .embed-responsive-16by9 iframe {
+        width: 700px !important;
+        height: 400px !important;
+    }
+    @@media(max-width:768px){
+        .embed-responsive-16by9 iframe {
+            width: 100% !important;
+            height: 150px !important;
+        }
+
+       
+            html{
+                font-size:10px!important;
+            }
+        
+    }
+
+</style>
+<script async defer crossorigin="anonymous" src="https://connect.facebook.net/en_US/sdk.js#xfbml=1&version=v11.0" nonce="your-nonce"></script>

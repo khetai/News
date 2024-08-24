@@ -1,0 +1,9 @@
+﻿@inject Microsoft.AspNetCore.Mvc.Localization.IViewLocalizer localizer
+@using System.Globalization;
+@foreach (Category item in ViewBag.Category)
+{
+    <li>
+        <a href="~/Home/NewsForCategory/@item.CategoryId">@item["CategoryName" + @localizer["Az"].Value] </a>
+
+    </li>
+}

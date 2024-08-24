@@ -1,0 +1,199 @@
+﻿@inject Microsoft.AspNetCore.Mvc.Localization.IViewLocalizer localizer
+@using System.Globalization;
+@using System.Text.RegularExpressions;
+@model List<NewsViewModel>
+@{
+    ViewData["Title"] = "News";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+<div class="app-main__outer">
+    <div class="app-main__inner">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="main-card mb-3 card">
+                    <div class="card-body">
+                        <h5 class="card-title">Kategoriyalar</h5>
+                        <table class="mb-0 table table-hover">
+                            <thead>
+                                <tr>
+                                    <th>#</th>
+                                    <th>Kateqoriya adı</th>
+                                    <th>Xəbərin başlığı </th>
+                                    <th>Tarix</th>
+                                    <th>Baxış</th>
+                                    <th class="text-center" colspan="2">
+                                        <a href="/Admin/AddNews">
+                                            <i class="pe-7s-plus"></i>
+                                        </a>
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+
+                                @{
+                                    var startIndex = (ViewBag.CurrentPage - 1) * 12;
+                                }
+                                @foreach (var item in Model)
+                                {
+
+                                    <tr postId="@item.XeberlerModel.NewsId">
+                                        <th>@(startIndex + 1)</th>
+                                        <td>
+                                            @foreach (var cat in item.CategoryForNewsModel)
+                                            {
+                                                <span>@cat.CategoryForNewsCategory["CategoryName" + @localizer["Az"].Value]</span>
+                                            }
+                                        </td>
+                                        <td>
+                                            @if (item.XeberlerModel.NewsLangSupport == "az" || item.XeberlerModel.NewsLangSupport == "inter")
+                                            {
+                                                @item.XeberlerModel.NewsTitleAz
+                                            }
+                                            else
+                                            {
+                                                @item.XeberlerModel.NewsTitleEn
+                                            }
+                                        </td>
+                                        @{
+                                            CultureInfo azCulture = new CultureInfo("az-Latn-AZ");
+                                            DateTime newsDateTime = (DateTime)item.XeberlerModel.NewsDate;
+                                            string formattedDateTime = newsDateTime.ToString("dd.MM.yy HH:mm", azCulture);
+                                        }
+
+
+
+                                        <td>@formattedDateTime</td>
+                                        <td>@item.XeberlerModel.NewsView</td>
+                                        <td class="text-center"><a class="text-danger delete"><i class="pe-7s-trash"></i></a></td>
+                                        <td class="text-center"><a class="text-success" href="/Admin/EditNews/@item.XeberlerModel.NewsId"><i class="pe-7s-pen"></i></a></td>
+                                    </tr>
+                                    startIndex++;
+                                }
+                            </tbody>
+                        </table>
+                        <form method="get" action="/Admin/News">
+                            <div class="custom-pagination position-relative">
+                                <nav aria-label="Page navigation example">
+                                    <ul class="pagination">
+
+                                        <!-- Previous Page Link -->
+                                        <li class="page-item" style="display: @(ViewBag.HidePrevious ? "none" : "block")">
+                                            <a class="page-link" href="@Url.Action("News", new { page = ViewBag.CurrentPage - 1 })">Previous</a>
+                                        </li>
+                                        <!-- Pagination Links -->
+                                        @if (ViewBag.TotalPages <= 7)
+                                        {
+                                            <!-- Display all page numbers if there are 7 or fewer pages -->
+                                            @for (int i = 1; i <= ViewBag.TotalPages; i++)
+                                            {
+                                                <li class="page-item @(i == ViewBag.CurrentPage ? "active" : "")">
+                                                    <a class="page-link" href="@Url.Action("News", new { page = i })">@i</a>
+                                                </li>
+                                            }
+                                        }
+                                        else
+                                        {
+                                            <!-- Display first three page numbers -->
+                                            @for (int i = 1; i <= 3; i++)
+                                            {
+                                                <li class="page-item @(i == ViewBag.CurrentPage ? "active" : "")">
+                                                    <a class="page-link" href="@Url.Action("News", new { page = i })">@i</a>
+                                                </li>
+                                            }
+
+                                            <!-- Display ellipsis before current page if it's greater than 4 -->
+                                            @if (ViewBag.CurrentPage > 4)
+                                            {
+                                                <li class="page-item disabled">
+                                                    <span class="page-link">...</span>
+                                                </li>
+                                            }
+
+                                            <!-- Display current page and the two pages before and after it -->
+                                            @for (int i = Math.Max(4, ViewBag.CurrentPage - 2); i <= Math.Min(ViewBag.CurrentPage + 2, ViewBag.TotalPages); i++)
+                                            {
+                                                <li class="page-item @(i == ViewBag.CurrentPage ? "active" : "")">
+                                                    <a class="page-link" href="@Url.Action("News", new { page = i })">@i</a>
+                                                </li>
+                                            }
+
+                                            <!-- Display ellipsis after current page if it's less than TotalPages - 3 -->
+                                            @if (ViewBag.CurrentPage < ViewBag.TotalPages - 3)
+                                            {
+                                                <li class="page-item disabled">
+                                                    <span class="page-link">...</span>
+                                                </li>
+                                            }
+
+                                            <!-- Display last three page numbers -->
+                                            @for (int i = ViewBag.TotalPages - 2; i <= ViewBag.TotalPages; i++)
+                                            {
+                                                <li class="page-item @(i == ViewBag.CurrentPage ? "active" : "")">
+                                                    <a class="page-link" href="@Url.Action("News", new { page = i })">@i</a>
+                                                </li>
+                                            }
+                                        }
+
+                                        <!-- Next Page Link -->
+                                        <li class="page-item" style="display: @(ViewBag.HideNext ? "none" : "block")">
+                                            <a class="page-link" href="@Url.Action("News", new { page = ViewBag.CurrentPage + 1 })" id="next-page">Next</a>
+                                        </li>
+                                    </ul>
+                                </nav>
+                            </div>
+                            <!-- Hidden Input to Store Current Page -->
+                            <input type="hidden" name="page" value="1" id="current-page">
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    td {
+        line-height: 30px;
+    }
+
+        td span {
+            background: #FF2C54;
+            color: white;
+            border-radius: 21px;
+            padding: 2px;
+            padding: 2px 7px;
+        }
+</style>
+
+<script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+<script>
+    $(function () {
+        $('.delete').click(function () {
+            var row = $(this).parents('tr')
+            ad = $(this).parents("tr").children("td").eq(1).text()
+            Swal.fire({
+                title: 'Əminsiniz mi?',
+                text: `"${ad}" xəbərini silmək istəyirsinizmi ?`,
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Bəli, silinsin!'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    Swal.fire(
+                        'Silindi!',
+                        `"${ad}" adlı xəbər silindi.`,
+                        'success'
+                    )
+                    $.post('../../Admin/RemoveNews/' + $(row).attr('postId'), function () {
+                        $(row).remove()
+                    })
+                }
+            })
+        })
+    })
+</script>
+
+<link rel="stylesheet" href="sweetalert2.min.css">

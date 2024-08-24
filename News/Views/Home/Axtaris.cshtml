@@ -1,0 +1,133 @@
+﻿@using System.Globalization;
+@inject Microsoft.AspNetCore.Mvc.Localization.IViewLocalizer localizer
+@model List<NewsViewModel>
+
+
+
+<div class="random-posts section-gap" id="newsxeber">
+    <div class="container">
+        <div class="section-title m-b-xs-40">
+            <h2 class="axil-title">@localizer["Axtarış"]</h2>
+        </div>
+        <div class="row">
+            <div class="col-lg-8 text-center">
+                <main class="axil-content text-left" id="newcontent">
+                    @foreach (var item in Model.OrderByDescending(x => x.XeberlerModel.NewsDate).Take(8))
+                    {
+                        <div class="media post-block post-block__mid m-b-xs-30">
+                            <a href="~/Home/NewsDetails/@item.XeberlerModel.NewsId" class="align-self-center">
+                                <img class=" m-r-xs-30" src="~/img/@item.XeberlerModel.NewsPhoto" alt="">
+                            </a>
+                            <div class="media-body">
+                                <div class="post-cat-group m-b-xs-10">
+
+                                    @foreach (var cat in @item.CategoryForNewsModel)
+                                    {
+                                        <a href="~/Home/NewsForCategory/@cat.CategoryForNewsCategoryId" class="post-cat cat-btn bg-color-blue-one">
+                                            @cat.CategoryForNewsCategory["CategoryName" + localizer["Az"].Value]
+                                        </a>
+                                    }
+                                </div>
+                                <h3 class="axil-post-title hover-line hover-line">
+                                    <a href="~/Home/NewsDetails/@item.XeberlerModel.NewsId">@item.XeberlerModel["NewsTitle" + localizer["Az"].Value]</a>
+                                </h3>
+                                @if (item.XeberlerModel["NewsContent" + localizer["Az"].Value] != null)
+                                {
+                                    var val = @item.XeberlerModel["NewsContent" + localizer["Az"].Value];
+                                    <p class="mid">@(val.ToString().Length < 200 ? val.ToString().Substring(0, val.ToString().Length) : val.ToString().Substring(0, 200))...</p>
+                                }
+                                <div class="post-metas">
+                                </div>
+                            </div>
+                        </div>
+                    }
+                </main>
+            </div>
+
+            @await Component.InvokeAsync("RightSide")
+
+        </div>
+    </div>
+</div>
+
+
+<section class="section-gap section-gap-top__with-text trending-stories">
+    <div class="container">
+        <div class="section-title m-b-xs-40">
+            <h2 class="axil-title">@localizer["Ən çox baxılan xəbərlər"]</h2>
+            @*<a href="#" class="btn-link">ALL TRENDING STORIES</a>*@
+        </div>
+        <div class="row">
+            @foreach (var item in Model.OrderByDescending(x => x.XeberlerModel.NewsView).Take(4))
+            {
+                CultureInfo azerbaijaniCulture = new CultureInfo("az-Latn-AZ");
+                string date = ((DateTime)item.XeberlerModel.NewsDate).ToString("dd MMMM yyyy", azerbaijaniCulture);
+
+                <div class="col-lg-6">
+                    <div class="media post-block m-b-xs-30">
+                        <a href="~/Home/NewsDetails/@item.XeberlerModel.NewsId" class="align-self-center">
+                            <img class=" m-r-xs-30"
+                                 src="~/img/@item.XeberlerModel.NewsPhoto" alt="@item.XeberlerModel.NewsTitleAz">
+                        </a>
+                        <div class="media-body">
+                            <div class="d-flex">
+                                @foreach (var cat in item.CategoryForNewsModel)
+                                {
+
+                                    <div class="post-cat-group m-b-xs-10">
+                                        <a href="~/Home/NewsForCategory/@cat.CategoryForNewsCategoryId" class="post-cat cat-btn bg-color-blue-two">@cat.CategoryForNewsCategory["CategoryName" + localizer["Az"].Value]</a>
+                                    </div>
+                                }
+                            </div>
+                            <h3 class="axil-post-title hover-line hover-line">
+                                <a href="~/Home/NewsDetails/@item.XeberlerModel.NewsId">
+                                    @item.XeberlerModel["NewsTitle" + localizer["Az"].Value]
+                                </a>
+                            </h3>
+
+                            <div class="post-metas">
+                                <ul class="list-inline">
+                                    <li><a href="#">@date</a></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+</section>
+
+
+<script>
+    let page = 0;
+    $('#pagination').click(function () {
+        page++;
+        console.log(page)
+        const url = `/Home/ViewMore/?page=${page}`;
+        $.get(url, function (res) {
+            console.log(res)
+            if (res.length == 0) {
+                $("#pagination").hide()
+            }
+            $(res).each(function () {
+                $('#newcontent').append(`
+                                         <div class="media post-block post-block__mid m-b-xs-30">
+                                                        <a href="../../Home/NewsDetails/${this.xeberlerModel.newsId}" class="align-self-center">
+                                                            <img class=" m-r-xs-30" src="../../img/${this.xeberlerModel.newsPhoto}" alt="">
+                                                </a>
+                                                <div class="media-body">
+                                                    <h3 class="axil-post-title hover-line hover-line">
+                                                                    <a href="../../Home/NewsDetails/${this.xeberlerModel.newsId}">${this.xeberlerModel["newsTitle" + '@localizer["Az"]']}</a>
+                                                    </h3>
+                                                                                                    <p class="mid">${this.xeberlerModel["newsContent" + '@localizer["Az"]'].toString().length < 200 ? this.xeberlerModel["newsContent" + '@localizer["Az"]'].toString().substring(0, this.xeberlerModel["newsContent" + '@localizer["Az"]'].toString().length) : this.xeberlerModel["newsContent" + '@localizer["Az"]'].toString().substring(0, 200)}...</p>
+                                                    <div class="post-metas">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                `);
+            });
+        });
+    });
+
+</script>

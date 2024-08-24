@@ -1,0 +1,10 @@
+﻿@using News.ViewModel;
+@using News
+@using News.Models
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@functions {
+    string GetTitleColor(int newsAdvantageId)
+    {
+        return newsAdvantageId == 1 ? "text-red" : "text-black";
+    }
+}
